@@ -36,7 +36,7 @@ struct FoodShop: View {
                         
                         VStack(spacing: 26) {
                             shopItem(
-                                imageName: "foodbowl",
+                                imageName: "image-removebg-preview-10 1",
                                 title: "Food Bowl",
                                 benefit1: "+ Energy",
                                 benefit2: nil,
@@ -49,7 +49,7 @@ struct FoodShop: View {
                             )
                             
                             shopItem(
-                                imageName: "healthysnack",
+                                imageName: "image-removebg-preview-12 1",
                                 title: "Healthy Snack",
                                 benefit1: "+ Happiness",
                                 benefit2: nil,
@@ -62,7 +62,7 @@ struct FoodShop: View {
                             )
                             
                             shopItem(
-                                imageName: "supermeal",
+                                imageName: "image 7",
                                 title: "Super Meal",
                                 benefit1: "+ Happiness",
                                 benefit2: "+ Energy",
@@ -130,7 +130,7 @@ struct FoodShop: View {
     
     func coinCard(coins: Int) -> some View {
         HStack(spacing: 14) {
-            Text("🪙")
+            Text("💲")
                 .font(.system(size: 28))
             
             Text("\(coins)")

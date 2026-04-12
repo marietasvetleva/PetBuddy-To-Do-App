@@ -7,7 +7,6 @@ struct OnboardingPage: View {
     private let userManager = UserManager()
     
     @State private var userName: String = ""
-    @State private var age: String = ""
     
     @State private var improveHealth = false
     @State private var reduceStress = false
@@ -44,8 +43,6 @@ struct OnboardingPage: View {
                         
                         customTextField(title: "Your Name:", text: $userName)
                         
-                        customTextField(title: "Your Age:", text: $age)
-                            .keyboardType(.numberPad)
                         
                         HStack(alignment: .center, spacing: 20) {
                             Text("Goal:")

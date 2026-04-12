@@ -34,7 +34,6 @@ struct TasksPage: View {
                             } else {
                                 ForEach(habits) { habit in
                                     taskItem(
-                                        emoji: emojiForHabit(habit.title),
                                         title: habit.title,
                                         repeatType: habit.repeatType,
                                         isCompleted: habit.isCompletedToday
@@ -104,14 +103,11 @@ struct TasksPage: View {
     }
     
     func taskItem(
-        emoji: String,
         title: String,
         repeatType: String,
         isCompleted: Bool
     ) -> some View {
         HStack(spacing: 14) {
-            Text(emoji)
-                .font(.system(size: 28))
             
             VStack(alignment: .leading, spacing: 6) {
                 Text(title)
@@ -137,25 +133,6 @@ struct TasksPage: View {
         .cornerRadius(24)
     }
     
-    func emojiForHabit(_ title: String) -> String {
-        let lowercasedTitle = title.lowercased()
-        
-        if lowercasedTitle.contains("water") {
-            return "💧"
-        } else if lowercasedTitle.contains("walk") {
-            return "🏃"
-        } else if lowercasedTitle.contains("meditate") || lowercasedTitle.contains("stretch") {
-            return "🧘"
-        } else if lowercasedTitle.contains("gym") || lowercasedTitle.contains("workout") {
-            return "🏋️"
-        } else if lowercasedTitle.contains("sleep") {
-            return "😴"
-        } else if lowercasedTitle.contains("eat") || lowercasedTitle.contains("drink") {
-            return "🍎"
-        } else {
-            return "✅"
-        }
-    }
 }
 
 #Preview {

@@ -28,7 +28,7 @@ struct HomePage: View {
                         
                         HStack(spacing: 16) {
                             statCard(icon: "🔥", text: "\(user?.streak ?? 0) days")
-                            statCard(icon: "🪙", text: "\(user?.totalCoins ?? 0)")
+                            statCard(icon: "💲", text: "\(user?.totalCoins ?? 0)")
                         }
                         .padding(.top, 20)
                         
@@ -88,7 +88,6 @@ struct HomePage: View {
                             } else {
                                 ForEach(habits) { habit in
                                     taskRow(
-                                        emoji: emojiForHabit(habit.title),
                                         title: habit.title,
                                         isDone: habit.isCompletedToday,
                                         action: {
@@ -171,14 +170,11 @@ struct HomePage: View {
     }
     
     func taskRow(
-        emoji: String,
         title: String,
         isDone: Bool,
         action: @escaping () -> Void
     ) -> some View {
         HStack {
-            Text(emoji)
-                .font(.system(size: 30))
             
             Text(title)
                 .font(.system(size: 20, weight: .medium))
@@ -206,24 +202,6 @@ struct HomePage: View {
         .background(Color(red: 0.70, green: 0.86, blue: 0.80))
         .cornerRadius(24)
         .shadow(color: .black.opacity(0.12), radius: 5, x: 0, y: 5)
-    }
-    
-    func emojiForHabit(_ title: String) -> String {
-        let lowercasedTitle = title.lowercased()
-        
-        if lowercasedTitle.contains("walk") {
-            return "🚶"
-        } else if lowercasedTitle.contains("stretch") {
-            return "🧘"
-        } else if lowercasedTitle.contains("water") {
-            return "💧"
-        } else if lowercasedTitle.contains("sleep") {
-            return "😴"
-        } else if lowercasedTitle.contains("run") {
-            return "🏃"
-        } else {
-            return "✅"
-        }
     }
 }
 
