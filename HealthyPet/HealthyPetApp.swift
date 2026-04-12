@@ -11,7 +11,7 @@ import SwiftUI
 struct HealthyPetApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            StartUpPage()
         }
     }
 }
