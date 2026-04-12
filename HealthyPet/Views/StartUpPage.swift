@@ -35,7 +35,7 @@ struct StartUpPage: View {
                     
                     Spacer()
                     
-                    NavigationLink(destination: OnboardingView()) {
+                    NavigationLink(destination: OnboardingPage()) {
                         Text("Get Started!")
                             .font(.headline)
                             .foregroundColor(.black)

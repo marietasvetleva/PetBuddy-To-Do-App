@@ -1,14 +1,14 @@
-//
-//  FoodShop.swift
-//  HealthyPet
-//
-//  Created by Marieta Svetleva on 09/04/2026.
-//
-
 import SwiftUI
+import SwiftData
 
 struct FoodShop: View {
+    @Query private var users: [User]
+    
+    private let shopManager = ShopManager()
+    
     var body: some View {
+        let user = users.first
+        
         ZStack {
             LinearGradient(
                 gradient: Gradient(colors: [
@@ -26,7 +26,7 @@ struct FoodShop: View {
                         
                         HStack {
                             Spacer()
-                            coinCard()
+                            coinCard(coins: user?.totalCoins ?? 0)
                         }
                         .padding(.top, 20)
                         
@@ -40,7 +40,12 @@ struct FoodShop: View {
                                 title: "Food Bowl",
                                 benefit1: "+ Energy",
                                 benefit2: nil,
-                                price: "10"
+                                price: "10",
+                                action: {
+                                    if let user {
+                                        shopManager.buyFoodBowl(for: user)
+                                    }
+                                }
                             )
                             
                             shopItem(
@@ -48,7 +53,12 @@ struct FoodShop: View {
                                 title: "Healthy Snack",
                                 benefit1: "+ Happiness",
                                 benefit2: nil,
-                                price: "15"
+                                price: "15",
+                                action: {
+                                    if let user {
+                                        shopManager.buyHealthySnack(for: user)
+                                    }
+                                }
                             )
                             
                             shopItem(
@@ -56,7 +66,12 @@ struct FoodShop: View {
                                 title: "Super Meal",
                                 benefit1: "+ Happiness",
                                 benefit2: "+ Energy",
-                                price: "15"
+                                price: "15",
+                                action: {
+                                    if let user {
+                                        shopManager.buySuperMeal(for: user)
+                                    }
+                                }
                             )
                         }
                         .padding(.vertical, 28)
@@ -64,6 +79,21 @@ struct FoodShop: View {
                         .background(Color.white.opacity(0.88))
                         .cornerRadius(30)
                         .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 6)
+                        
+                        if let pet = user?.pet {
+                            VStack(spacing: 8) {
+                                Text("Pet: \(pet.name)")
+                                    .font(.system(size: 22, weight: .medium))
+                                
+                                Text("Mood: \(pet.mood)")
+                                    .font(.system(size: 18))
+                                
+                                Text("Energy: \(pet.energy)%")
+                                    .font(.system(size: 18))
+                            }
+                            .foregroundColor(.black)
+                            .padding()
+                        }
                         
                         Spacer(minLength: 20)
                     }
@@ -86,8 +116,7 @@ struct FoodShop: View {
                     
                     Spacer()
                     
-                    
-                    NavigationLink(destination: Text("Profile Page")) {
+                    NavigationLink(destination: ProfilePage()) {
                         navIcon(systemName: "person.crop.circle")
                     }
                     
@@ -99,12 +128,12 @@ struct FoodShop: View {
         .navigationBarBackButtonHidden(true)
     }
     
-    func coinCard() -> some View {
+    func coinCard(coins: Int) -> some View {
         HStack(spacing: 14) {
-            Text("")
+            Text("🪙")
                 .font(.system(size: 28))
             
-            Text("100")
+            Text("\(coins)")
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(.black)
         }
@@ -122,7 +151,7 @@ struct FoodShop: View {
     
     func priceTag(_ price: String) -> some View {
         HStack(spacing: 6) {
-            Text("")
+            Text("🪙")
                 .font(.system(size: 18))
             
             Text(price)
@@ -140,7 +169,8 @@ struct FoodShop: View {
         title: String,
         benefit1: String,
         benefit2: String?,
-        price: String
+        price: String,
+        action: @escaping () -> Void
     ) -> some View {
         HStack(alignment: .center, spacing: 18) {
             Image(imageName)
@@ -171,9 +201,7 @@ struct FoodShop: View {
                     priceTag(price)
                 }
                 
-                Button(action: {
-                    print("\(title) bought")
-                }) {
+                Button(action: action) {
                     Text("Buy")
                         .font(.system(size: 24, weight: .medium))
                         .foregroundColor(.black)

@@ -1,13 +1,11 @@
-//
-//  OnboardingPage.swift
-//  HealthyPet
-//
-//  Created by Marieta Svetleva on 09/04/2026.
-//
-
 import SwiftUI
+import SwiftData
 
-struct OnboardingView: View {
+struct OnboardingPage: View {
+    @Environment(\.modelContext) private var modelContext
+    
+    private let userManager = UserManager()
+    
     @State private var userName: String = ""
     @State private var age: String = ""
     
@@ -17,6 +15,8 @@ struct OnboardingView: View {
     
     @State private var selectedPet: String = "Cat"
     @State private var petName: String = ""
+    
+    @State private var goToHome = false
     
     let pets = ["Cat", "Dog", "Bunny", "Penguin"]
     
@@ -90,7 +90,7 @@ struct OnboardingView: View {
                     .background(Color.white.opacity(0.85))
                     .cornerRadius(30)
                     
-                    NavigationLink(destination: HomePage()) {
+                    Button(action: createUserAndPet) {
                         Text("Create My Pet")
                             .font(.system(size: 24, weight: .medium))
                             .foregroundColor(.black)
@@ -106,6 +106,22 @@ struct OnboardingView: View {
                 .padding(.horizontal, 24)
                 .padding(.top, 24)
             }
+        }
+        .navigationDestination(isPresented: $goToHome) {
+            HomePage()
+        }
+    }
+    
+    private func createUserAndPet() {
+        let success = userManager.createUserAndPet(
+            userName: userName,
+            petName: petName,
+            petType: selectedPet,
+            modelContext: modelContext
+        )
+        
+        if success {
+            goToHome = true
         }
     }
     
@@ -126,7 +142,7 @@ struct OnboardingView: View {
                 .font(.system(size: 18, weight: .medium))
                 .foregroundColor(.black)
         }
-        .toggleStyle(CheckboxToggleStyle())
+        .toggleStyle(CustomCheckboxToggleStyle())
     }
     
     @ViewBuilder
@@ -159,7 +175,7 @@ struct OnboardingView: View {
     }
 }
 
-struct CheckboxToggleStyle: ToggleStyle {
+struct CustomCheckboxToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
         Button(action: {
             configuration.isOn.toggle()
@@ -185,6 +201,6 @@ struct CheckboxToggleStyle: ToggleStyle {
 
 #Preview {
     NavigationStack {
-        OnboardingView()
+        OnboardingPage()
     }
 }

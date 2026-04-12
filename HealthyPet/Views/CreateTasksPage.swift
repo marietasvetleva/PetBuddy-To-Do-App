@@ -1,13 +1,12 @@
-//
-//  CreateTasksPage.swift
-//  HealthyPet
-//
-//  Created by Marieta Svetleva on 09/04/2026.
-//
-
 import SwiftUI
+import SwiftData
 
 struct CreateTaskView: View {
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
+    
+    private let taskManager = TaskManager()
+    
     @State private var taskName: String = ""
     @State private var selectedRepeat = "Daily"
     @State private var reminderTime = Date()
@@ -81,20 +80,34 @@ struct CreateTaskView: View {
                 .background(Color.white.opacity(0.9))
                 .cornerRadius(28)
                 
-                Button("Create!") {
-                    print("Task created")
+                Button(action: createTask) {
+                    Text("Create!")
+                        .font(.title2)
+                        .foregroundColor(.black)
+                        .frame(width: 250, height: 80)
+                        .background(Color(red: 0.72, green: 0.86, blue: 0.81))
+                        .cornerRadius(24)
+                        .shadow(radius: 6)
                 }
-                .font(.title2)
-                .frame(width: 250, height: 80)
-                .background(Color(red: 0.72, green: 0.86, blue: 0.81))
-                .cornerRadius(24)
-                .shadow(radius: 6)
                 
                 Spacer()
             }
             .padding()
         }
         .navigationBarBackButtonHidden(false)
+    }
+    
+    private func createTask() {
+        let success = taskManager.createTask(
+            taskName: taskName,
+            repeatType: selectedRepeat,
+            reminderTime: reminderTime,
+            modelContext: modelContext
+        )
+        
+        if success {
+            dismiss()
+        }
     }
 }
 

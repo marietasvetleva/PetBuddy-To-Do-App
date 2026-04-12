@@ -1,13 +1,9 @@
-//
-//  TasksPage.swift
-//  HealthyPet
-//
-//  Created by Marieta Svetleva on 09/04/2026.
-//
-
 import SwiftUI
+import SwiftData
 
 struct TasksPage: View {
+    @Query private var habits: [Habit]
+    
     var body: some View {
         ZStack {
             LinearGradient(
@@ -29,15 +25,25 @@ struct TasksPage: View {
                             .foregroundColor(.black)
                             .padding(.top, 30)
                         
-                        VStack(spacing: 30) {
-                            taskItem(text: "💧 Drink 2L of water today")
-                            taskItem(text: "🏃 Walk 8000 steps")
-                            taskItem(text: "🧘 Meditate for 5 minutes")
-                            taskItem(text: "🍎 Avoid sugary drinks today")
-                            taskItem(text: "🏋️ Go to the Gym")
+                        VStack(spacing: 20) {
+                            if habits.isEmpty {
+                                Text("No tasks yet")
+                                    .font(.system(size: 20, weight: .medium))
+                                    .foregroundColor(.black.opacity(0.7))
+                                    .padding(.vertical, 30)
+                            } else {
+                                ForEach(habits) { habit in
+                                    taskItem(
+                                        emoji: emojiForHabit(habit.title),
+                                        title: habit.title,
+                                        repeatType: habit.repeatType,
+                                        isCompleted: habit.isCompletedToday
+                                    )
+                                }
+                            }
                         }
-                        .padding(.vertical, 40)
-                        .padding(.horizontal, 28)
+                        .padding(.vertical, 30)
+                        .padding(.horizontal, 20)
                         .background(Color.white.opacity(0.88))
                         .cornerRadius(30)
                         .shadow(color: .black.opacity(0.12), radius: 8, x: 0, y: 6)
@@ -73,7 +79,6 @@ struct TasksPage: View {
                             .foregroundColor(.black)
                     }
                     
-                    
                     Spacer()
                     
                     NavigationLink(destination: FoodShop()) {
@@ -84,7 +89,7 @@ struct TasksPage: View {
                     
                     Spacer()
                     
-                    NavigationLink(destination: Text("Profile")) {
+                    NavigationLink(destination: ProfilePage()) {
                         Image(systemName: "person.crop.circle")
                             .font(.system(size: 34))
                             .foregroundColor(.black)
@@ -93,31 +98,68 @@ struct TasksPage: View {
                     Spacer()
                 }
                 .padding(.vertical, 18)
-                        .padding(.vertical, 18)
-                    }
-                }
-                .navigationBarBackButtonHidden(true)
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+    
+    func taskItem(
+        emoji: String,
+        title: String,
+        repeatType: String,
+        isCompleted: Bool
+    ) -> some View {
+        HStack(spacing: 14) {
+            Text(emoji)
+                .font(.system(size: 28))
+            
+            VStack(alignment: .leading, spacing: 6) {
+                Text(title)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(.black)
+                
+                Text(repeatType)
+                    .font(.system(size: 14, weight: .regular))
+                    .foregroundColor(.black.opacity(0.6))
             }
             
-            func taskItem(text: String) -> some View {
-                HStack {
-                    Text(text)
-                        .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(.black)
-                    
-                    Spacer()
-                }
-                .padding(.horizontal, 24)
-                .frame(height: 92)
-                .background(Color(red: 0.95, green: 0.88, blue: 0.84))
-                .cornerRadius(24)
+            Spacer()
+            
+            if isCompleted {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 26))
+                    .foregroundColor(.green)
             }
         }
-        
-        #Preview {
-            NavigationStack {
-                TasksPage()
-            }
-        }
+        .padding(.horizontal, 24)
+        .frame(minHeight: 92)
+        .background(Color(red: 0.95, green: 0.88, blue: 0.84))
+        .cornerRadius(24)
+    }
     
+    func emojiForHabit(_ title: String) -> String {
+        let lowercasedTitle = title.lowercased()
+        
+        if lowercasedTitle.contains("water") {
+            return "💧"
+        } else if lowercasedTitle.contains("walk") {
+            return "🏃"
+        } else if lowercasedTitle.contains("meditate") || lowercasedTitle.contains("stretch") {
+            return "🧘"
+        } else if lowercasedTitle.contains("gym") || lowercasedTitle.contains("workout") {
+            return "🏋️"
+        } else if lowercasedTitle.contains("sleep") {
+            return "😴"
+        } else if lowercasedTitle.contains("eat") || lowercasedTitle.contains("drink") {
+            return "🍎"
+        } else {
+            return "✅"
+        }
+    }
+}
 
+#Preview {
+    NavigationStack {
+        TasksPage()
+    }
+}

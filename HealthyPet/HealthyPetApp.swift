@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct HealthyPetApp: App {
@@ -13,5 +14,7 @@ struct HealthyPetApp: App {
         WindowGroup {
             StartUpPage()
         }
+        .modelContainer(for: [ShopItem.self, User.self, Pet.self, Habit.self])
+
     }
 }
